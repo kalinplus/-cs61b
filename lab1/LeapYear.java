@@ -24,6 +24,8 @@ public class LeapYear {
             } else {
                 return true;
             }
+        } else {
+            return false;
         }
     }
 
