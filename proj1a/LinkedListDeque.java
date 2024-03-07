@@ -87,7 +87,7 @@ public class LinkedListDeque<T> {
         if (index == 0) {
             return head.item;
         }
-        return getRecursive(head.next, index);
+        return getRecursive(head.next, index - 1);
     }
     public T getRecursive(int index) {
         if (index >= size) {
