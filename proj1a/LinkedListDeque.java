@@ -68,6 +68,7 @@ public class LinkedListDeque<T> {
     public T removeLast() {
         if (size == 0) {
             return null;
+        }
         T last = sentinel.prev.item;
         Node tmp = sentinel.prev;
         sentinel.prev = tmp.prev;
