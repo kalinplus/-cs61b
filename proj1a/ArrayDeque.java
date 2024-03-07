@@ -35,7 +35,7 @@ public class ArrayDeque<T> {
 
     private void resize(double rate) {
         int newSize = (int)(size * rate);
-        T[] newArray = (T []) new Object[size];
+        T[] newArray = (T []) new Object[newSize];
         for (int i = 0; i < curSize; i++) {
             newArray[i] = array[(front + i) % size];
         }
