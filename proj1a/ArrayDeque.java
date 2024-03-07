@@ -1,8 +1,8 @@
 public class ArrayDeque<T> {
-    T[] array;
-    int front;
-    int curSize;
-    int size;
+    private T[] array;
+    private int front;
+    private int curSize;
+    private int size;
 
     public ArrayDeque() {
         array = (T []) new Object[8];
