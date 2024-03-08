@@ -34,7 +34,7 @@ public class ArrayDeque<T> {
     }
 
     private void resize(double rate) {
-        int newSize = (int)(size * rate);
+        int newSize = (int)((double)(size) * rate);
         T[] newArray = (T []) new Object[newSize];
         for (int i = 0; i < curSize; i++) {
             newArray[i] = array[(front + i) % size];
@@ -47,7 +47,7 @@ public class ArrayDeque<T> {
         resize(2.0);
     }
     private void shrink() {
-        while (size >= 16 && (double)(curSize / size) <= 0.25) {
+        while (size >= 16 && ((double)curSize / (double)size) <= 0.25) {
             resize(0.5);
         }
     }
