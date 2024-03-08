@@ -75,10 +75,10 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        shrink();
         if (isEmpty()) {
             return null;
         }
+        shrink();
         T first = array[front];
         array[front] = null;
         front = (front + 1) % size;
@@ -87,10 +87,10 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-        shrink();
         if (isEmpty()) {
             return null;
         }
+        shrink();
         T last = array[getLastPos()];
         array[getLastPos()] = null;
         curSize -= 1;
