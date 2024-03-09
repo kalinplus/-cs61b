@@ -47,6 +47,7 @@ public class TestPalindrome {
         assertFalse(palindrome.isPalindrome("hell", cc));
         assertFalse(palindrome.isPalindrome("!@#$%^&$#14235", cc));
         assertFalse(palindrome.isPalindrome("ABC14BB", cc));
+        assertFalse(palindrome.isPalindrome("ABg14bB", cc));
 
         CharacterComparator ccc = new OffByN(5);
         assertTrue(palindrome.isPalindrome("", ccc));
