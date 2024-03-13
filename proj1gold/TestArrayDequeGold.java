@@ -15,8 +15,6 @@ public class TestArrayDequeGold {
              if (numBetZeroAndOne < 0.25) {
                  bad1.addFirst(i);
                  good1.addFirst(i);
-                 bad1.printDeque();
-                 good1.printDeque();
                  errorMsg += "addFirst(" + i + ")\n";
              } else if (numBetZeroAndOne < 0.5) {
                  bad1.addLast(i);
