@@ -175,6 +175,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 } else {
                     prev.right = null;
                 }
+                if (curr == root) {
+                    root = null;
+                }
                 return value;
             // one child
                 // how to deal with that we remove the root with one child?
@@ -187,18 +190,20 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 } else {
                     prev.right = curr.right;
                 }
-                value = curr.value;
-                curr = curr.right;
-                return value;
+                if (curr == root) {
+                    root = curr.right;
+                }
+                return curr.value;
             } else if (curr.right == null && curr.left != null) {
                 if (isLeftLean) {
                     prev.left = curr.left;
                 } else {
                     prev.right = curr.left;
                 }
-                value = curr.value;
-                curr = curr.left;
-                return value;
+                if (curr == root) {
+                    root = curr.left;
+                }
+                return curr.value;
             // two children, need to swap
             } else {
                 K toRemove = swapWithLeftLargest(curr, curr.left);
