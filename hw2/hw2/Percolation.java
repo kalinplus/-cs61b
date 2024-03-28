@@ -14,10 +14,10 @@ public class Percolation {
     private boolean[][] isSitesOpen;
     private WeightedQuickUnionUF fullUf;
     private WeightedQuickUnionUF percoUf;
-    int topSite;
-    int botSite;
-    int numOfOpenSite;
-    int size;
+    private int topSite;
+    private int botSite;
+    private int numOfOpenSite;
+    private int size;
 
     public Percolation(int N) {
         if (N <= 0)

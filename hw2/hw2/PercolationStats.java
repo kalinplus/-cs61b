@@ -10,7 +10,7 @@ public class PercolationStats {
             throw new IndexOutOfBoundsException();
         }
         this.T = T;
-        double[] xi = new double[T];
+        this.xi = new double[T];
         for (int i = 0; i < T; i += 1) {
             Percolation p = pf.make(N);
             int openSites = 0;
