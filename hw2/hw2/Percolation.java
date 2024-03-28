@@ -20,6 +20,9 @@ public class Percolation {
     int size;
 
     public Percolation(int N) {
+        if (N <= 0)
+            throw new IllegalArgumentException();
+
         topSite = N * N;
         botSite = N * N + 1;
         numOfOpenSite = 0;
@@ -43,6 +46,9 @@ public class Percolation {
     public void open(int row, int col) {
         boundCheck(row, col);
         // handle open
+        if (isSitesOpen[row][col])
+            return;
+
         isSitesOpen[row][col] = true;
         numOfOpenSite += 1;
         // deal with union (full)
@@ -76,6 +82,10 @@ public class Percolation {
     }
 
     public boolean percolates() {
+        // can't be percolated before open
+        if (size == 1) {
+            return isSitesOpen[0][0] && percoUf.connected(topSite, botSite);
+        }
         return percoUf.connected(topSite, botSite);
     }
 

@@ -3,10 +3,6 @@ package hw2;
 import java.lang.*;
 public class PercolationStats {
     private double confidenceConst = 1.96;
-    public double miu;
-    public double sigma;
-    public double confidenceLow;
-    public double confidenceHigh;
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
             throw new IndexOutOfBoundsException();
@@ -24,10 +20,10 @@ public class PercolationStats {
             xi[i] = (double)(openSites) / (N * N);
         }
 
-        miu = mean(xi);
-        sigma = stddev(xi);
-        confidenceLow = confidenceLow(miu, sigma, T);
-        confidenceHigh = confidenceHigh(miu, sigma, T);
+        mean(xi);
+        stddev(xi);
+        confidenceLow(mean(xi), stddev(xi), T);
+        confidenceHigh(mean(xi), stddev(xi), T);
     }
     public double mean(double[] xi) {
         return edu.princeton.cs.introcs.StdStats.mean(xi);
