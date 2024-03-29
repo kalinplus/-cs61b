@@ -10,7 +10,7 @@ public class PercolationStats {
     private int T;
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
-            throw new IndexOutOfBoundsException("N and T should be greater than 0");
+            throw new IndexOutOfBoundsException();
         }
 
         this.T = T;
