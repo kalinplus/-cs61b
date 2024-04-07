@@ -108,7 +108,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         validateSinkSwimArg(index);
 
         int parentIndex = parentIndex(index);
-        while (parentIndex != 0 &&
+        while (index > 1 &&
                contents[index].myPriority <= contents[parentIndex].myPriority) {
             swap(index, parentIndex);
             index = parentIndex;
