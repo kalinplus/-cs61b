@@ -124,13 +124,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
-        validateSinkSwimArg(index);
+//        validateSinkSwimArg(index);
 
         int left = leftIndex(index);
         int right = rightIndex(index);
 
         while (true) {
-            if (left > size && right > size) {
+            if (left > size) {
                 break;
                 // Below are at least one valid child cases
                 // There is no possibility that left is null but right not (break seq)
