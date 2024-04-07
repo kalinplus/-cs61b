@@ -28,7 +28,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int leftIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return 2 * i;
     }
 
     /**
@@ -36,7 +36,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int rightIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return 2 * i + 1;
     }
 
     /**
@@ -44,7 +44,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int parentIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return i / 2;
     }
 
     /**
@@ -107,19 +107,44 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        /** TODO: Your code here. */
-        return;
+        int parentIndex = parentIndex(index);
+        while (parentIndex != 0 &&
+               contents[index].myPriority <= contents[parentIndex].myPriority) {
+            swap(index, parentIndex);
+            index = parentIndex;
+            parentIndex = parentIndex(parentIndex);
+        }
     }
 
     /**
      * Bubbles down the node currently at the given index.
+     * 1. If two children are both null, break
+     * 2. If left (right) is null and cur is larger than it, swap and break
+     * 3. If left and right are both non-null, get min and swap
      */
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        /** TODO: Your code here. */
-        return;
+        int left = leftIndex(index);
+        int right = rightIndex(index);
+
+        while (true) {
+            if (left > size && right > size) {
+                break;
+                // Below are at least one valid child cases
+                // There is no possibility that left is null but right not (break seq)
+            } else {
+                // minIndex must be non-null and smaller one
+               int minIndex = min(left, right);
+               // pri of index is smaller than the smaller child, no further sink demand
+               if (min(index, minIndex) == index)
+                   break;
+               swap(index, minIndex);
+               index = minIndex; left = leftIndex(index); right = rightIndex(index);
+            }
+
+        }
     }
 
     /**
@@ -132,8 +157,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size + 1 == contents.length) {
             resize(contents.length * 2);
         }
+        Node newItem = new Node(item, priority);
 
-        /* TODO: Your code here! */
+        contents[size + 1] = newItem;
+        // Can't swap the following two lines because swim will check input index <= size
+        size += 1;
+        swim(size);
+
     }
 
     /**
@@ -142,8 +172,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        /* TODO: Your code here! */
-        return null;
+        return contents[1].myItem;
     }
 
     /**
@@ -157,8 +186,15 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        /* TODO: Your code here! */
-        return null;
+        if (size == 0) {
+            return null;
+        }
+        T min = peek();
+        swap(1, size);
+        contents[size] = null;
+        size -= 1;
+        sink(1);
+        return min;
     }
 
     /**
@@ -177,11 +213,25 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * item. Check item equality with .equals(), not ==. This is a challenging
      * bonus problem, but shouldn't be too hard if you really understand heaps
      * and think about the algorithm before you start to code.
+     *
+     * 1. iterate to find the item with its index
+     * 2. After changing priority, it may need swim or sink,
+     *    but act any of these will lead to index loss
+     * 3. So we first set its pri to [1]'s pri - 1 (smaller than min pri), and swim it, then it
+     *    must in the 1 index (root)
+     * 4. Now its index is clear, change its pri to given pri, and sink it
      */
     @Override
     public void changePriority(T item, double priority) {
-        /* TODO: Your code here! */
-        return;
+        for (int i = 1; i <= size; i += 1) {
+            if (contents[i].myItem.equals(item)) {
+                contents[i].myPriority = contents[1].myPriority - 1;
+                swim(i);
+                contents[1].myPriority = priority;
+                sink(1);
+                break;
+            }
+        }
     }
 
     /**
@@ -412,6 +462,32 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             assertEquals(expected[i], pq.removeMin());
             i += 1;
         }
+    }
+
+    @Test
+    public void testChangePriority() {
+        ArrayHeap<String> pq = new ArrayHeap<>();
+        pq.insert("a", 1);
+        pq.insert("b", 2);
+        pq.insert("c", 3);
+        pq.insert("d", 4);
+        pq.insert("e", 5);
+        pq.insert("f", 6);
+        pq.insert("g", 7);
+        pq.insert("h", 8);
+//        System.out.println("pq before change priority:");
+//        System.out.println(pq.toString());
+
+        pq.changePriority("b", 10);
+//        System.out.println("pq before change priority:");
+//        System.out.println(pq.toString());
+        assertEquals("b", pq.contents[8].myItem);
+        pq.changePriority("h", 100);
+        assertEquals("h", pq.contents[8].myItem);
+        pq.changePriority("e", 1000);
+        assertEquals("e", pq.contents[5].myItem);
+        pq.changePriority("f", 0);
+        assertEquals("f", pq.contents[1].myItem);
     }
 
 }
