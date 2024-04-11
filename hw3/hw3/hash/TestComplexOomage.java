@@ -39,12 +39,14 @@ public class TestComplexOomage {
     @Test
     public void testWithDeadlyParams() {
         List<Oomage> deadlyList = new ArrayList<>();
-        List<Integer> deadParams = new ArrayList<>();
-        for (int i = 0; i < 20; i += 1) {
-            deadParams.add(1);
+        // We need to create a list of complex oomages, whose distribution is not even
+        // that is, many of their hash code collide
+        List<Integer> params = new ArrayList<>(10);
+        for (int i = 0; i < 10; i += 1) {
+            params.add(100);
+            ComplexOomage co = new ComplexOomage(params);
+            deadlyList.add(co);
         }
-        ComplexOomage deadOomage = new ComplexOomage(deadParams);
-        deadlyList.add(deadOomage);
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
