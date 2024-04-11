@@ -44,11 +44,9 @@ public class TestSimpleOomage {
                 }
             }
         }
-        for (int i = 0; i < 52 * 52 * 52; i += 1) {
-            for (int j = 0; j < 52 * 52 * 52; j += 1) {
-                if (i != j) {
-                    assertNotEquals(oos[i].hashCode(), oos[j].hashCode());
-                }
+        for (int i = 0; i < 52 * 52 * 52 - 1; i += 1) {
+            for (int j = i + 1; j < 52 * 52 * 52; j += 1) {
+                assertNotEquals(oos[i].hashCode(), oos[j].hashCode());
             }
         }
     }

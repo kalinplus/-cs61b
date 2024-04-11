@@ -1,11 +1,11 @@
 package hw3.hash;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class TestComplexOomage {
 
@@ -43,9 +43,14 @@ public class TestComplexOomage {
         // that is, many of their hash code collide
         List<Integer> params = new ArrayList<>(10);
         for (int i = 0; i < 10; i += 1) {
-            params.add(100);
+            params.add(255);
             ComplexOomage co = new ComplexOomage(params);
             deadlyList.add(co);
+        }
+        for (int i = 0; i < 9; i += 1) {
+            for (int j = i + 1; j < 10; j += 1) {
+                assertFalse(deadlyList.get(i).hashCode() == deadlyList.get(j).hashCode());
+            }
         }
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
