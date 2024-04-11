@@ -10,26 +10,37 @@ public class SimpleOomage implements Oomage {
     protected int blue;
 
     private static final double WIDTH = 0.01;
-    private static final boolean USE_PERFECT_HASH = false;
+    private static final boolean USE_PERFECT_HASH = true /*false*/;
 
+    /**
+     * 1. If they are the same object, return true (also include both null)
+     * 2. If other is null, return false. Since this method is called, this can't be null
+     * 3. If not the same type (getClass()), return false
+     * 4. Finally, check the rgb values
+     *
+     * @param o another object to check equal
+     * @return boolean euqal when objects are the same type and rgb are all equals
+     */
     @Override
     public boolean equals(Object o) {
-        // TODO: Write this method.
-        return false;
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        SimpleOomage that = (SimpleOomage) o;
+        return this.red == that.red && this.blue == that.blue && this.green == that.green;
     }
 
-    /* Uncomment this method after you've written
-       equals and failed the testHashCodeAndEqualsConsistency
-       test.
+    // Uncomment this method after you've written
+    //   equals and failed the testHashCodeAndEqualsConsistency
+    //   test.
     @Override
     public int hashCode() {
         if (!USE_PERFECT_HASH) {
             return red + green + blue;
         } else {
-            // TODO: Write a perfect hash function for Simple Oomages.
-            return 0;
+            return (red / 5) * 52 * 52 + (green / 5) * 52 + (blue / 5);
         }
-    }*/
+    }
 
     public SimpleOomage(int r, int g, int b) {
         if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
