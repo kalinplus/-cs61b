@@ -24,19 +24,27 @@ public class MazeDepthFirstPaths extends MazeExplorer {
         edgeTo[s] = s;
     }
 
+    /**
+     *  base case: if v == t, target is found, return
+     *  recursive case:
+     *  1. set current vertex to marked
+     *  2. check base case
+     *  3. for each neighbor w of v
+     *    a. check if w is marked, if it does, skip it
+     *    b. set distTo and edgeTo
+     *    c. recursively find dfs(w)
+     */
     private void dfs(int v) {
         marked[v] = true;
         announce();
-
         if (v == t) {
             targetFound = true;
         }
-
         if (targetFound) {
             return;
         }
-
-        for (int w : maze.adj(v)) {
+        for (int w: maze.adj(v)) {
+            // why you ignore this case? Think about it
             if (!marked[w]) {
                 edgeTo[w] = v;
                 announce();
@@ -47,6 +55,29 @@ public class MazeDepthFirstPaths extends MazeExplorer {
                 }
             }
         }
+
+//        marked[v] = true;
+//        announce();
+//
+//        if (v == t) {
+//            targetFound = true;
+//        }
+//
+//        if (targetFound) {
+//            return;
+//        }
+//
+//        for (int w : maze.adj(v)) {
+//            if (!marked[w]) {
+//                edgeTo[w] = v;
+//                announce();
+//                distTo[w] = distTo[v] + 1;
+//                dfs(w);
+//                if (targetFound) {
+//                    return;
+//                }
+//            }
+//        }
     }
 
     @Override
