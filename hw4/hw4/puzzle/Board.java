@@ -1,22 +1,18 @@
 package hw4.puzzle;
 import java.lang.IndexOutOfBoundsException;
 import edu.princeton.cs.algs4.Queue;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class Board implements WorldState{
 
-    int[][] board;
-    int size;
-    final int BLANK = 0;
+    private final int[][] board;
+    private final int size;
+    private final int BLANK = 0;
 
     public Board(int[][] tiles) {
         board = new int[tiles.length][tiles.length];
         size = tiles.length;
-        for (int i = 0; i < size; i += 1) {
-            for (int j = 0; j < size; j += 1) {
-                board[i][j] = tiles[i][j];
-            }
+        for (int i = 0; i < size; i++) {
+            System.arraycopy(tiles[i], 0, this.board[i], 0, size);
         }
     }
 
@@ -118,10 +114,8 @@ public class Board implements WorldState{
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
                 if (board[i][j] != BLANK) {
-                    Pos p = rxyTo1d(board[i][j]);
-                    if (p.x != i || p.y != j) {
+                    if (board[i][j] != i * size + j + 1)
                         hamming += 1;
-                    }
                 }
             }
         }
@@ -133,30 +127,47 @@ public class Board implements WorldState{
         int manhattan = 0;
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
-                if (board[i][j] != BLANK) {
-                    Pos p = rxyTo1d(board[i][j]);
-                    manhattan += Math.abs(i - p.x);
-                    manhattan += Math.abs(j - p.y);
+//                if (board[i][j] != BLANK) {
+//                    Pos p = rxyTo1d(board[i][j]);
+//                    manhattan += Math.abs(i - p.x);
+//                    manhattan += Math.abs(j - p.y);
+//                }
+                if (board[i][j] == 0) {
+                    continue;
+                }
+                if (board[i][j] != i * size + (j + 1)) {
+                    int iGoal = (board[i][j] - 1) / size;
+                    int jGoal = board[i][j] - iGoal * size - 1;
+                    manhattan += (int) Math.abs(j - jGoal) + (int) Math.abs(i - iGoal);
                 }
             }
         }
         return manhattan;
     }
 
+    @Override
     public int estimatedDistanceToGoal() {
         return manhattan();
     }
 
+    @Override
     public boolean equals(Object y) {
-        if (!(y instanceof Board)) {
+        if (y == this) {
+            return true;
+        }
+        if (y == null) {
             return false;
         }
-        if (size() != ((Board) y).size()) {
+        if (y.getClass() != this.getClass()) {
+            return false;
+        }
+        Board that = (Board) y;
+        if (this.size() != that.size()) {
             return false;
         }
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
-                if (board[i][j] != ((Board) y).board[i][j]) {
+                if (board[i][j] != that.board[i][j]) {
                     return false;
                 }
             }

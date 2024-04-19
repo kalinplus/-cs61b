@@ -32,8 +32,10 @@ public class Solver {
         }
     }
     // attributes
-    MinPQ<SearchNode> solu;
-    SearchNode goal;
+    private MinPQ<SearchNode> solu;
+    private int moves;
+    private Deque<WorldState> path = new ArrayDeque<>();
+
 
     /**
      * 1. initialize the world and state
@@ -57,29 +59,31 @@ public class Solver {
     }
 
     private void solver() {
-        if (solu.min().ws.isGoal()) {
-            goal = solu.min();
-            return;
-        }
-        SearchNode cur = solu.delMin();
-        for (WorldState neigh: cur.ws.neighbors()) {
-            if (cur.prev == null || !neigh.equals(cur.prev.ws)) {
-                solu.insert(new SearchNode(neigh, cur.moves + 1, cur));
+        while (true) {
+            SearchNode cur = solu.delMin();
+            if (cur.ws.isGoal()) {
+                moves = cur.moves;
+
+                SearchNode sn = cur;
+                while (sn != null) {
+                    path.addFirst(sn.ws);
+                    sn = sn.prev;
+                }
+                return;
+            }
+            for (WorldState neigh : cur.ws.neighbors()) {
+                if (cur.prev == null || !neigh.equals(cur.prev.ws)) {
+                    solu.insert(new SearchNode(neigh, cur.moves + 1, cur));
+                }
             }
         }
-        solver();
     }
+
     public int moves() {
-        return goal.moves;
+        return moves;
     }
 
     public Iterable<WorldState> solution() {
-        List<WorldState> s = new ArrayList<>();
-        SearchNode tra = goal;
-        while (tra != null) {
-            s.add(0, tra.ws);
-            tra = tra.prev;
-        }
-        return s;
+        return path;
     }
 }
