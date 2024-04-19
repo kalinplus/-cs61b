@@ -87,7 +87,4 @@ public class Solver {
         return path;
     }
 
-    public int hashCode() {
-        return super.hashCode();
-    }
 }
