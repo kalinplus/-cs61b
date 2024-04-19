@@ -3,6 +3,23 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestBoard {
+    // temp test for rxyTo1d
+//    @Test
+//    public void testrxyTo1d() {
+//        int[][] tiles = new int[4][4];
+//        Board b = new Board(tiles);
+//
+//        Board.Pos p1 = b.rxyTo1d(1);
+//        Board.Pos p2 = b.rxyTo1d(7);
+//        Board.Pos p3 = b.rxyTo1d(14);
+//        assertEquals(0, p1.x);
+//        assertEquals(0, p1.y);
+//        assertEquals(1, p2.x);
+//        assertEquals(2, p2.y);
+//        assertEquals(3, p3.x);
+//        assertEquals(1, p3.y);
+//    }
+
     @Test
     public void verifyImmutability() {
         int r = 2;
