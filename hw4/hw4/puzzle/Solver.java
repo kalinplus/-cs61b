@@ -86,4 +86,8 @@ public class Solver {
     public Iterable<WorldState> solution() {
         return path;
     }
+
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

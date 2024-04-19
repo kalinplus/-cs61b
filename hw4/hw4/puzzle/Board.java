@@ -218,4 +218,8 @@ public class Board implements WorldState{
         int y = n - x * size() - 1;
         return new Pos(x, y);
     }
+
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
