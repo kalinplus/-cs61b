@@ -80,6 +80,9 @@ public class MergeSort {
      *  */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
+        if (items.isEmpty()) {
+            return null;
+        }
         Queue<Queue<Item>> qqs = makeSingleItemQueues(items);
         while (qqs.size() > 1) {
             Queue<Item> q1 = qqs.dequeue();
@@ -91,6 +94,9 @@ public class MergeSort {
     }
 
     public static void main(String[] args) {
+        System.out.println(MergeSort.mergeSort(new Queue<>()));
+        System.out.println();
+
         Queue<Integer> nums = new Queue<>();
         nums.enqueue(3);
         nums.enqueue(2);
