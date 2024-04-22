@@ -34,8 +34,13 @@ public class MergeSort {
     /** Returns a queue of queues that each contain one item from items. */
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+        Queue<Queue<Item>> qqs = new Queue<>();
+        for (Item i: items) {
+            Queue<Item> siq = new Queue<>();
+            siq.enqueue(i);
+            qqs.enqueue(siq);
+        }
+        return qqs;
     }
 
     /**
@@ -53,14 +58,61 @@ public class MergeSort {
      */
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
-        // Your code here!
-        return null;
+        Queue<Item> sorted = new Queue<>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            sorted.enqueue(getMin(q1, q2));
+        }
+        return sorted;
     }
 
-    /** Returns a Queue that contains the given items sorted from least to greatest. */
+    /** Returns a Queue that contains the given items sorted from least to greatest.
+     *  The given Queue remains no change
+     *
+     *  1. construct a new Queue sorted, partition Queue into
+     *     queue of queues by makeSingleItemQueues()
+     *  2. while size of sorted is larger than 1, continuously dequeue two queues,
+     *     merge them, and enqueue
+     *  3. justification: in 2, because of FIFO, you will always merge small queues
+     *     before, and large later. After there is only one, that is what you want
+     *
+     * @param items A Queue to be sorted.
+     * @return merge sorted new Queue
+     *  */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        Queue<Queue<Item>> qqs = makeSingleItemQueues(items);
+        while (qqs.size() > 1) {
+            Queue<Item> q1 = qqs.dequeue();
+            Queue<Item> q2 = qqs.dequeue();
+            Queue<Item> sorted = mergeSortedQueues(q1, q2);
+            qqs.enqueue(sorted);
+        }
+        return qqs.peek();
+    }
+
+    public static void main(String[] args) {
+        Queue<Integer> nums = new Queue<>();
+        nums.enqueue(3);
+        nums.enqueue(2);
+        nums.enqueue(4);
+        nums.enqueue(1);
+        nums.enqueue(5);
+
+        System.out.println(nums.toString());
+        System.out.println(MergeSort.mergeSort(nums).toString());
+        System.out.println();
+
+        Queue<String> alice = new Queue<>();
+        alice.enqueue("Alice");
+        alice.enqueue("Travel");
+        alice.enqueue("Wonder");
+        alice.enqueue("Find");
+        alice.enqueue("Kadas");
+        alice.enqueue("Turtle");
+        alice.enqueue("Soul");
+        alice.enqueue("Dark");
+
+        System.out.println(alice.toString());
+        System.out.println(MergeSort.mergeSort(alice).toString());
     }
 }
