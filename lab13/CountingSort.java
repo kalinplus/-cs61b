@@ -63,10 +63,40 @@ public class CountingSort {
      * than 2 billion.
      * Does not touch original array (non-destructive method).
      *
+     * 1. find the min ana max
+     * 2. construct an array length max - min + 1 to store them. Index 0 to min, ...
+     * 3. count the occurance times of elems in array
+     * 4. update count to start position
+     * 5. create sorted based on start
+     *
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        // get min and max in arr
+        int max = Integer.MIN_VALUE; int min = Integer.MAX_VALUE;
+        for (int i: arr) {
+            max = i > max ? i : max;
+            min = i < min ? i : min;
+        }
+        // every number n has a bias (-min) to store in count
+        int[] count = new int[max - min + 1];
+        for (int i: arr) {
+            count[i + (-min)] += 1;
+        }
+        // convert count to start index for each number
+        int[] start = new int[max - min + 1];
+        int pos = 0;
+        for (int i = 0; i < start.length; i += 1) {
+            start[i] = pos;
+            pos += count[i];
+        }
+
+        int[] sorted = new int[arr.length];
+        for (int i: arr) {
+            int place = i + (-min);
+            sorted[start[place]] = i;
+            start[place] += 1;
+        }
+        return sorted;
     }
 }

@@ -16,19 +16,60 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+        // init copy and max length
+        String[] copy = new String[asciis.length];
+        int longest = Integer.MIN_VALUE;
+        int cou = 0;
+        for (String s: asciis) {
+            longest = Math.max(longest, s.length());
+            copy[cou] = s;
+            cou += 1;
+        }
+        // counting sort every char
+        for (int d = longest - 1; d >= 0; d -= 1) {
+            sortHelperLSD(copy, d);
+        }
+        return copy;
     }
 
     /**
      * LSD helper method that performs a destructive counting sort the array of
      * Strings based off characters at a specific index.
+     *
+     * 1. just counting sort for char in given index
+     *   a. if length of string > index + 1, just sort normally
+     *   b. if not, prepend there is a "_" as placeholder, and store it in [0]
+     *
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
     private static void sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
-        return;
+        int[] count = new int[256];
+        for (String s: asciis) {
+            if (s.length() > index) {
+                int asc = (int)s.charAt(index);
+                count[asc] += 1;
+            } else {
+                count[0] += 1;
+            }
+        }
+
+        int[] start = new int[256];
+        int pos = 0;
+        for (int i = 0; i < 256; i += 1) {
+            start[i] = pos;
+            pos += count[i];
+        }
+
+        String[] indexSorted = new String[asciis.length];
+        for (String s: asciis) {
+            int place = s.length() > index ? (int)s.charAt(index) : 0;
+            indexSorted[start[place]] = s;
+            start[place] += 1;
+        }
+        for (int i = 0; i < asciis.length; i += 1) {
+            asciis[i] = indexSorted[i];
+        }
     }
 
     /**
