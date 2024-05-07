@@ -22,10 +22,10 @@ public class SeamCarver {
     private Picture pic;
 
     public SeamCarver(Picture picture) {
-        pic = picture;
+        pic = new Picture(picture);
     }
     public Picture picture() {
-        return pic;
+        return new Picture(this.pic);
     }
     public int width() {
         return pic.width();
@@ -35,6 +35,7 @@ public class SeamCarver {
     }
 
     // tested with several different pictures
+    // x is col, y is row
     public double energy(int x, int y) {
         validateXY(x, y);
         Color x1 = pic.get(effX(x + 1), y);
@@ -54,19 +55,17 @@ public class SeamCarver {
 
     // use transpose to avoid repetition
     public int[] findHorizontalSeam() {
-        int h = height();
-        int w = width();
-        Picture transPic = new Picture(h, w);
-        for (int r = 0; r < h; r += 1) {
-            for (int c = 0; c < w; c += 1) {
+        Picture transPic = new Picture(height(), width());
+        for (int r = 0; r < height(); r += 1) {
+            for (int c = 0; c < width(); c += 1) {
                 Color color = this.pic.get(c, r);
                 transPic.set(r, c, color);
             }
         }
-        Picture tmp = new Picture(this.pic);
-        this.pic = new Picture(transPic);
+        Picture tmp = this.pic;
+        this.pic = transPic;
         int[] hseam = findVerticalSeam();
-        this.pic = new Picture(tmp);
+        this.pic = tmp;
         return hseam;
     }
 
@@ -88,21 +87,22 @@ public class SeamCarver {
     // thoroughly tested, from small to large, and edge single line, large picture
     // picture with all same energy cases. All right so far
     public int[] findVerticalSeam() {
-        int w = width(); int h = height();
         // h is row, w is column
-        int[][] pathWeightTo = new int[h][w];
-        Pos[][] edgeTo = new Pos[h][w];
+        int[][] pathWeightTo = new int[height()][width()];
+        Pos[][] edgeTo = new Pos[height()][width()];
+        double[][] energies = new double[height()][width()];
         MinPQ<Pos> pq = new MinPQ<>();
 
-        for (int c = 0; c < w; c += 1) {
+        for (int c = 0; c < width(); c += 1) {
             double e = energy(c, 0);
+            energies[0][c] = e;
             pathWeightTo[0][c] = (int) e;
             Pos p = new Pos(c, 0, e);
             edgeTo[0][c] = p;
             pq.insert(p);
         }
-        for (int r = 1; r < h; r += 1) {
-            for (int c = 0; c < w; c += 1) {
+        for (int r = 1; r < height(); r += 1) {
+            for (int c = 0; c < width(); c += 1) {
                 pathWeightTo[r][c] = Integer.MAX_VALUE;
             }
         }
@@ -110,23 +110,29 @@ public class SeamCarver {
         while (!pq.isEmpty()) {
             Pos p = pq.delMin();
             int r = p.r;
-            if (r == h - 1) {
+            if (r == height() - 1) {
                 return getSeam(p, edgeTo);
             }
             int c = p.c;
-            relax(pq, c - 1, r + 1, p, pathWeightTo, edgeTo);
-            relax(pq, c, r + 1, p, pathWeightTo, edgeTo);
-            relax(pq, c + 1, r + 1, p, pathWeightTo, edgeTo);
+            relax(pq, c - 1, r + 1, p, pathWeightTo, edgeTo, energies);
+            relax(pq, c, r + 1, p, pathWeightTo, edgeTo, energies);
+            relax(pq, c + 1, r + 1, p, pathWeightTo, edgeTo, energies);
         }
         return null;
     }
-    private void relax(MinPQ<Pos> pq, int c, int r, Pos p, int[][] pathWeightTo, Pos[][] edgeTo) {
+    private void relax(MinPQ<Pos> pq, int c, int r, Pos p, int[][] pathWeightTo, Pos[][] edgeTo, double[][] energies) {
         if (inBound(c, r)) {
-            int e = (int) energy(c, r);
+            double e;
+//            if (energies[r][c] != 0.0) {
+//                e = energies[r][c];
+//            } else {
+                e = energy(c, r);
+//                energies[r][c] = e;
+//            }
             if (p.pw + e < pathWeightTo[r][c]) {
-                pathWeightTo[r][c] = (int) p.pw + e;
+                pathWeightTo[r][c] = (int) (p.pw + e);
                 edgeTo[r][c] = p;
-                pq.insert(new Pos(c, r, (int) p.pw + e));
+                pq.insert(new Pos(c, r, (int) (p.pw + e)));
             }
         }
     }
@@ -178,7 +184,8 @@ public class SeamCarver {
             throw new IllegalArgumentException("Invalid seam length " + sl + ", should be " + wh);
         }
         for (int i = 0; i < sl - 1; i += 1) {
-            if (Math.abs(seam[i] - seam[i + 1]) > 1) {
+            int diff = seam[i] - seam[i + 1];
+            if (diff > 1 || diff < -1) {
                 throw new IllegalArgumentException("Two consecutive entries " + seam[i]
                         + " and " + seam[i + 1] + " differ by more than 1");
             }
