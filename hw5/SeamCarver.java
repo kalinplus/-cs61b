@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.lang.IndexOutOfBoundsException;
 import java.lang.IllegalArgumentException;
 import java.lang.Comparable;
@@ -62,7 +63,8 @@ public class SeamCarver {
         Picture transPic = new Picture(h, w);
         for (int r = 0; r < h; r += 1) {
             for (int c = 0; c < w; c += 1) {
-                transPic.setRGB(r, c, pic.getRGB(c, r));
+                Color color = this.pic.get(c, r);
+                transPic.set(r, c, color);
             }
         }
         Picture tmp = this.pic;
