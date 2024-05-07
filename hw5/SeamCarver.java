@@ -2,10 +2,6 @@ import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.lang.IndexOutOfBoundsException;
-import java.lang.IllegalArgumentException;
-import java.lang.Comparable;
 
 
 /**
@@ -74,7 +70,7 @@ public class SeamCarver {
         return hseam;
     }
 
-    private class Pos implements Comparable<Pos>{
+    private class Pos implements Comparable<Pos> {
         private int c;
         private int r;
         private double pw;
@@ -100,7 +96,7 @@ public class SeamCarver {
 
         for (int c = 0; c < w; c += 1) {
             double e = energy(c, 0);
-            pathWeightTo[0][c] = (int)e;
+            pathWeightTo[0][c] = (int) e;
             Pos p = new Pos(c, 0, e);
             edgeTo[0][c] = p;
             pq.insert(p);
@@ -114,8 +110,9 @@ public class SeamCarver {
         while (!pq.isEmpty()) {
             Pos p = pq.delMin();
             int r = p.r;
-            if (r == h - 1)
+            if (r == h - 1) {
                 return getSeam(p, edgeTo);
+            }
             int c = p.c;
             relax(pq, c - 1, r + 1, p, pathWeightTo, edgeTo);
             relax(pq, c, r + 1, p, pathWeightTo, edgeTo);
@@ -125,11 +122,11 @@ public class SeamCarver {
     }
     private void relax(MinPQ<Pos> pq, int c, int r, Pos p, int[][] pathWeightTo, Pos[][] edgeTo) {
         if (inBound(c, r)) {
-            int e = (int)energy(c, r);
+            int e = (int) energy(c, r);
             if (p.pw + e < pathWeightTo[r][c]) {
-                pathWeightTo[r][c] = (int)p.pw + e;
+                pathWeightTo[r][c] = (int) p.pw + e;
                 edgeTo[r][c] = p;
-                pq.insert(new Pos(c, r, (int)p.pw + e));
+                pq.insert(new Pos(c, r, (int) p.pw + e));
             }
         }
     }
@@ -175,15 +172,15 @@ public class SeamCarver {
     }
 
     // todo
-    private void validateSeam(int[] seam, int WH) {
+    private void validateSeam(int[] seam, int wh) {
         int sl = seam.length;
-        if (sl != WH) {
-            throw new IllegalArgumentException("Invalid seam length " + sl + ", should be " + WH);
+        if (sl != wh) {
+            throw new IllegalArgumentException("Invalid seam length " + sl + ", should be " + wh);
         }
         for (int i = 0; i < sl - 1; i += 1) {
             if (Math.abs(seam[i] - seam[i + 1]) > 1) {
-                throw new IllegalArgumentException("Two consecutive entries " + seam[i] +
-                        " and " + seam[i + 1] + " differ by more than 1");
+                throw new IllegalArgumentException("Two consecutive entries " + seam[i]
+                        + " and " + seam[i + 1] + " differ by more than 1");
             }
         }
     }
