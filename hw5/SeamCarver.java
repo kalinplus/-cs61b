@@ -67,10 +67,10 @@ public class SeamCarver {
                 transPic.set(r, c, color);
             }
         }
-        Picture tmp = this.pic;
-        this.pic = transPic;
+        Picture tmp = new Picture(this.pic);
+        this.pic = new Picture(transPic);
         int[] hseam = findVerticalSeam();
-        this.pic = tmp;
+        this.pic = new Picture(tmp);
         return hseam;
     }
 
