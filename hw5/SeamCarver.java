@@ -25,7 +25,7 @@ public class SeamCarver {
         pic = new Picture(picture);
     }
     public Picture picture() {
-        return new Picture(this.pic);
+        return new Picture(pic);
     }
     public int width() {
         return pic.width();
@@ -123,12 +123,12 @@ public class SeamCarver {
     private void relax(MinPQ<Pos> pq, int c, int r, Pos p, int[][] pathWeightTo, Pos[][] edgeTo, double[][] energies) {
         if (inBound(c, r)) {
             double e;
-//            if (energies[r][c] != 0.0) {
-//                e = energies[r][c];
-//            } else {
+            if (energies[r][c] != 0.0) {
+                e = energies[r][c];
+            } else {
                 e = energy(c, r);
-//                energies[r][c] = e;
-//            }
+                energies[r][c] = e;
+            }
             if (p.pw + e < pathWeightTo[r][c]) {
                 pathWeightTo[r][c] = (int) (p.pw + e);
                 edgeTo[r][c] = p;
