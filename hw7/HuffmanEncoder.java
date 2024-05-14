@@ -34,8 +34,6 @@ public class HuffmanEncoder {
         BinaryTrie btrie = new BinaryTrie(freTable);
         ObjectWriter ow = new ObjectWriter(fileName + ".huf");
         ow.writeObject(btrie);
-        Integer len = symbols.length;
-        ow.writeObject(len);
         Map<Character, BitSequence> lookupTable = btrie.buildLookupTable();
         List<BitSequence> symbolList = new ArrayList<>();
         for (char s : symbols) {

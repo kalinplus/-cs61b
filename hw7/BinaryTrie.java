@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.Comparable;
+//import java.lang.Comparable;
 import edu.princeton.cs.algs4.MinPQ;
 
 public class BinaryTrie implements Serializable {
@@ -45,6 +45,10 @@ public class BinaryTrie implements Serializable {
         Node trav = root;
         int i = 0;
         while (true) {
+            // in case of querySequence is not long enough
+            if (i == querySequence.length()) {
+                return null;
+            }
             int bit = querySequence.bitAt(i);
             if (bit == 0) {
                 lpfm += "0";
@@ -56,6 +60,7 @@ public class BinaryTrie implements Serializable {
             if (isLeaf(trav)) {
                 return new Match(new BitSequence(lpfm), trav.symbol);
             }
+            i += 1;
         }
     }
 
