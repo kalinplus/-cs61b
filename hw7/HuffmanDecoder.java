@@ -10,7 +10,7 @@ public class HuffmanDecoder {
         BinaryTrie btrie = (BinaryTrie) or.readObject();
         BitSequence entire = (BitSequence) or.readObject();
         List<Character> symbols = new ArrayList<>();
-        while(true) {
+        while (true) {
             Match lpfm = btrie.longestPrefixMatch(entire);
             if (lpfm == null) {
                 break;
