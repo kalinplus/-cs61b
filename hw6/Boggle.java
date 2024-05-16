@@ -1,5 +1,8 @@
-import java.util.*;
-
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Comparator;
 import edu.princeton.cs.algs4.MinPQ;
 public class Boggle {
     
@@ -8,7 +11,6 @@ public class Boggle {
     static String dictPath = "words.txt";
     /**
      * Solves a Boggle puzzle.
-     *
      * 0. What's more, what important variables do we need in solve()?
      *     (1) char board[][]
      *     (2) MinPQ ks, store k longest found words dynamically
@@ -57,7 +59,7 @@ public class Boggle {
         }
 
         // init MinPQ to store longest k found words
-        MinPQ<String> klwpq = new MinPQ<>(new wordComparator());
+        MinPQ<String> klwpq = new MinPQ<>(new WordComparator());
         Queue<Search> sq = new LinkedList<>();
         // init prefix trie for matching valid words
         Trie prefix = new Trie(dictPath);
@@ -68,37 +70,33 @@ public class Boggle {
                 relax(sq, k, klwpq, height, width, board);
             }
         }
-
-        // get result: k longest strings in list
         return getKLongest(klwpq);
     }
 
-    private static void relax(Queue<Search> sq, int k, MinPQ<String> klwpq, int height, int width, Character[][] board) {
-        while (!sq.isEmpty()) {
-            Search se = sq.poll();
-            if (se.node != null) {
-                se.visited.add(se.p);
-
-                if (se.node.getKey()) {
-                    insert(se.node.getSoFar(), k, klwpq);
-                }
-
-                int r = se.p.r;
-                int c = se.p.c;
-                for (int x = r - 1; x <= r + 1; x += 1) {
-                    for (int y = c - 1; y <= c + 1; y += 1) {
-                        if (x >= 0 && x < height && y >= 0 && y < width) {
-                            Pos adj = new Pos(x, y);
-                            if (!se.visited.contains(adj)) {
-                                ArrayList<Pos> adjVisited = new ArrayList<>(se.visited);
-                                sq.add(new Search(se.node.getNext(board[x][y]), adj, adjVisited));
-                            }
+private static void relax(Queue<Search> sq, int k, MinPQ<String> klwpq, int height, int width, Character[][] board) {
+    while (!sq.isEmpty()) {
+        Search se = sq.poll();
+        if (se.node != null) {
+            se.visited.add(se.p);
+            if (se.node.getKey()) {
+                insert(se.node.getSoFar(), k, klwpq);
+            }
+            int r = se.p.r;
+            int c = se.p.c;
+            for (int x = r - 1; x <= r + 1; x += 1) {
+                for (int y = c - 1; y <= c + 1; y += 1) {
+                    if (x >= 0 && x < height && y >= 0 && y < width) {
+                        Pos adj = new Pos(x, y);
+                        if (!se.visited.contains(adj)) {
+                            ArrayList<Pos> adjVisited = new ArrayList<>(se.visited);
+                            sq.add(new Search(se.node.getNext(board[x][y]), adj, adjVisited));
                         }
                     }
                 }
             }
         }
     }
+}
 
     private static void insert(String word, int k, MinPQ<String> klwpq) {
         for (String w : klwpq) {
@@ -122,7 +120,7 @@ public class Boggle {
         for (int i = size - 1; i >= 0; i -= 1) {
             klwls.add(tmp.get(i));
         }
-//        printKLongest(klwls);
+        printKLongest(klwls);
         return klwls;
     }
 
@@ -132,7 +130,7 @@ public class Boggle {
         }
     }
 
-    private static class wordComparator implements Comparator<String>{
+    private static class WordComparator implements Comparator<String> {
         public int compare(String w1, String w2) {
             if (w1.length() != w2.length()) {
                 return w1.length() - w2.length();
@@ -143,8 +141,8 @@ public class Boggle {
     }
 
     private static class Pos {
-        public int r;
-        public int c;
+        private int r;
+        private int c;
         public Pos(int r, int c) {
             this.r = r;
             this.c = c;
@@ -161,12 +159,17 @@ public class Boggle {
             Pos posThat = (Pos) that;
             return this.r == posThat.r && this.c == posThat.c;
         }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
     }
 
     private static class Search {
-        public Trie.Node node;
-        public Pos p;
-        public List<Pos> visited;
+        private Trie.Node node;
+        private Pos p;
+        private List<Pos> visited;
         public Search(Trie.Node node, Pos p, List<Pos> visited) {
             this.node = node;
             this.p = p;
@@ -174,7 +177,7 @@ public class Boggle {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 //        solve(20, "exampleBoard2.txt");
 //        solve(7, "exampleBoard.txt");
 //        solve(50, "smallBoard.txt");
