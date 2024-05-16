@@ -24,7 +24,8 @@ public class Boggle {
      * 5. init a queue, for every tile
      *   a. enqueue it as entry
      *   b. visit it, which means: dequeue it, add it to mark list, check if soFar is valid word
-     *   c. if this search node is not null, we iterate through all adj (adj of cur node, not start pos)
+     *   c. if this search node is not null, we iterate through all adj
+     *      (adj of cur node, not start pos)
      *      that is not visited push them into queue
      *
      * @param k The maximum number of words to return.
@@ -73,30 +74,31 @@ public class Boggle {
         return getKLongest(klwpq);
     }
 
-private static void relax(Queue<Search> sq, int k, MinPQ<String> klwpq, int height, int width, Character[][] board) {
-    while (!sq.isEmpty()) {
-        Search se = sq.poll();
-        if (se.node != null) {
-            se.visited.add(se.p);
-            if (se.node.getKey()) {
-                insert(se.node.getSoFar(), k, klwpq);
-            }
-            int r = se.p.r;
-            int c = se.p.c;
-            for (int x = r - 1; x <= r + 1; x += 1) {
-                for (int y = c - 1; y <= c + 1; y += 1) {
-                    if (x >= 0 && x < height && y >= 0 && y < width) {
-                        Pos adj = new Pos(x, y);
-                        if (!se.visited.contains(adj)) {
-                            ArrayList<Pos> adjVisited = new ArrayList<>(se.visited);
-                            sq.add(new Search(se.node.getNext(board[x][y]), adj, adjVisited));
+    private static void relax(Queue<Search> sq, int k, MinPQ<String> klwpq,
+                              int height, int width, Character[][] board) {
+        while (!sq.isEmpty()) {
+            Search se = sq.poll();
+            if (se.node != null) {
+                se.visited.add(se.p);
+                if (se.node.getKey()) {
+                    insert(se.node.getSoFar(), k, klwpq);
+                }
+                int r = se.p.r;
+                int c = se.p.c;
+                for (int x = r - 1; x <= r + 1; x += 1) {
+                    for (int y = c - 1; y <= c + 1; y += 1) {
+                        if (x >= 0 && x < height && y >= 0 && y < width) {
+                            Pos adj = new Pos(x, y);
+                            if (!se.visited.contains(adj)) {
+                                ArrayList<Pos> adjVisited = new ArrayList<>(se.visited);
+                                sq.add(new Search(se.node.getNext(board[x][y]), adj, adjVisited));
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
 
     private static void insert(String word, int k, MinPQ<String> klwpq) {
         for (String w : klwpq) {
