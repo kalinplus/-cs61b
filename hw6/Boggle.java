@@ -122,15 +122,15 @@ public class Boggle {
         for (int i = size - 1; i >= 0; i -= 1) {
             klwls.add(tmp.get(i));
         }
-        printKLongest(klwls);
+//        printKLongest(klwls);
         return klwls;
     }
 
-    private static void printKLongest(List<String> klw) {
-        for (String s : klw) {
-            System.out.println(s);
-        }
-    }
+//    private static void printKLongest(List<String> klw) {
+//        for (String s : klw) {
+//            System.out.println(s);
+//        }
+//    }
 
     private static class WordComparator implements Comparator<String> {
         public int compare(String w1, String w2) {
